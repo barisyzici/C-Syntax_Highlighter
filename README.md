@@ -11,7 +11,16 @@ Projeye ulaşmak için [tıklayınız.](https://barisyzici.github.io/C-Syntax_Hi
 - C diline özgü renklendirme (highlighting)
 - Hatalı ifadelerin anında tespiti ve uyarı gösterimi
 - Karanlık tema ile sade ve modern arayüz
-  
+
+### Tespit Edilebilen Hatalar
+- Eksik veya hatalı parantezler
+- Eksik ; (noktalı virgül)
+- Yanlış if, while, return kullanımı
+- Fonksiyon bildirimi/parantezleri
+- Struct tanımlama hataları
+- Tip tanımı ama tanımlayıcı eksikse
+- Değişken adı eksik, sayı yerine sembol, vb.
+
 ## 📸 Ekran Görüntüleri
 
 ![Giris Ekrani](img/1.png)
