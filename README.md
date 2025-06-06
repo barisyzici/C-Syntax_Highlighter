@@ -74,7 +74,7 @@ Her token, HTML içinde `span` etiketiyle sarılır ve CSS sınıfına göre ren
 ### 🎬 Video Gösterimi
 
 Projeyi canlı izlemek için kısa demo videosunu izleyin:  
-🔗 [Demo Videosu](https://link_to_your_demo_video)
+🔗 [Demo Videosu](https://www.youtube.com/watch?v=0vyxMH5l6Kc)
 
 ### 📖 Makale
 
