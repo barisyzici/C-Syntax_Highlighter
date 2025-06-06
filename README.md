@@ -12,15 +12,6 @@ Projeye ulaşmak için [tıklayınız.](https://barisyzici.github.io/C-Syntax_Hi
 - Hatalı ifadelerin anında tespiti ve uyarı gösterimi
 - Karanlık tema ile sade ve modern arayüz
 
-### Tespit Edilebilen Hatalar
-- Eksik veya hatalı parantezler
-- Eksik ; (noktalı virgül)
-- Yanlış if, while, return kullanımı
-- Fonksiyon bildirimi/parantezleri
-- Struct tanımlama hataları
-- Tip tanımı ama tanımlayıcı eksikse
-- Değişken adı eksik, sayı yerine sembol, vb.
-
 ## 📸 Ekran Görüntüleri
 
 ![Giris Ekrani](img/1.png)
@@ -78,6 +69,15 @@ Her token, HTML içinde `span` etiketiyle sarılır ve CSS sınıfına göre ren
 | `string`     | Turuncu       |
 | `comment`    | Yeşil italik  |
 | `error`      | Kırmızı arka  |
+
+### Tespit Edilebilen Hatalar
+- Eksik veya hatalı parantezler
+- Eksik ; (noktalı virgül)
+- Yanlış if, while, return kullanımı
+- Fonksiyon bildirimi/parantezleri
+- Struct tanımlama hataları
+- Tip tanımı ama tanımlayıcı eksikse
+- Değişken adı eksik, sayı yerine sembol, vb.
 
 ## 🖼️ Arayüz & Gerçek Zamanlı İşleyiş
 
