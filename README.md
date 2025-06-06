@@ -2,6 +2,8 @@
 
 Bu proje, C diline özel gerçek zamanlı sözdizimi ve sözcüksel analiz yapan bir web uygulamasıdır. Kullanıcı arayüzü üzerinden yazılan C kodları anlık olarak renklendirilir ve hatalar gösterilir.
 
+[Projeye ulaşmak için tıklayınız.](https://barisyzici.github.io/C-Syntax_Highlighter/)
+
 ## 🚀 Özellikler
 
 - Gerçek zamanlı sözdizimi analizi (Top-Down Parser)
