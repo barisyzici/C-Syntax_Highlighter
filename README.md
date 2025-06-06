@@ -79,15 +79,7 @@ Projeyi canlı izlemek için kısa demo videosunu izleyin:
 ### 📖 Makale
 
 Projenin detaylı çözüm sürecini ve tasarım kararlarını anlattığım yazıya göz atın:  
-📝 [Makale Bağlantısı](https://link_to_your_article)
-
-## 📂 Proje Yapısı
-
-```
-project-root/
-├── index.html
-└── README.md
-```
+📝 [Makale Bağlantısı](https://medium.com/@barisyzici/ger%C3%A7ek-zamanl%C4%B1-grammar-tabanl%C4%B1-c-dili-s%C3%B6zdizimi-vurgulay%C4%B1c%C4%B1-c66889b63db3)
 
 ## 🛠️ Kullanılan Teknolojiler
 
