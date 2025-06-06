@@ -15,7 +15,10 @@ Projeye ulaşmak için [tıklayınız.](https://barisyzici.github.io/C-Syntax_Hi
 ## 📸 Ekran Görüntüleri
 
 ![Giris Ekrani](img/1.png)
+
 ![Kod](img/2.png)
+
+![Hata](img/3.png)
 
 ## 📚 Teknik Detaylar
 
