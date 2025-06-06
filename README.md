@@ -11,10 +11,15 @@ Projeye ulaşmak için [tıklayınız.](https://barisyzici.github.io/C-Syntax_Hi
 - C diline özgü renklendirme (highlighting)
 - Hatalı ifadelerin anında tespiti ve uyarı gösterimi
 - Karanlık tema ile sade ve modern arayüz
+  
+## 📸 Ekran Görüntüleri
+
+![Giris Ekrani](img/1.png)
+![Kod](img/2.png)
 
 ## 📚 Teknik Detaylar
 
-### ✅ Kullanılan Gramer
+### Kullanılan Gramer
 
 Uygulama, aşağıdaki C yapılarının analizini desteklemektedir:
 
@@ -24,7 +29,7 @@ Uygulama, aşağıdaki C yapılarının analizini desteklemektedir:
 - Struct tanımları (`struct`)
 - Atama ve işleçler (`=`, `+`, `-`, `*`, `/`)
 
-### 🧠 Sözdizimi Analizi
+### Sözdizimi Analizi
 
 Kod, satır satır analiz edilerek yapısal kontrol yapılır. Her yapı için özel tanımlanmış parse fonksiyonları vardır:
 
@@ -36,7 +41,7 @@ function parseStatement(tokens) {
 
 Bu sistem top-down bir yaklaşım kullanır; yani kod yukarıdan aşağı doğru, blok blok analiz edilir.
 
-### 🧩 Sözcüksel Analiz
+### Sözcüksel Analiz
 
 JavaScript kullanılarak, regex tabanlı bir tokenizer tasarlanmıştır. Her kelime (token), aşağıdaki türlerden biri olarak sınıflandırılır:
 
@@ -48,7 +53,7 @@ JavaScript kullanılarak, regex tabanlı bir tokenizer tasarlanmıştır. Her ke
 - `comment` → `//` ile başlayan satırlar
 - `error` → Hatalı yapılar
 
-### 🎨 Vurgulama Kuralları
+### Vurgulama Kuralları
 
 Her token, HTML içinde `span` etiketiyle sarılır ve CSS sınıfına göre renklendirilir.
 
@@ -71,15 +76,15 @@ Her token, HTML içinde `span` etiketiyle sarılır ve CSS sınıfına göre ren
 
 ## 🧪 Demo
 
-### 🎬 Video Gösterimi
+### Video Gösterimi
 
 Projeyi canlı izlemek için kısa demo videosunu izleyin:  
 🔗 [Demo Videosu](https://www.youtube.com/watch?v=0vyxMH5l6Kc)
 
-### 📖 Makale
+### Makale
 
 Projenin detaylı çözüm sürecini ve tasarım kararlarını anlattığım yazıya göz atın:  
-📝 [Makale Bağlantısı](https://medium.com/@barisyzici/ger%C3%A7ek-zamanl%C4%B1-grammar-tabanl%C4%B1-c-dili-s%C3%B6zdizimi-vurgulay%C4%B1c%C4%B1-c66889b63db3)
+🔗 [Makale Bağlantısı](https://medium.com/@barisyzici/ger%C3%A7ek-zamanl%C4%B1-grammar-tabanl%C4%B1-c-dili-s%C3%B6zdizimi-vurgulay%C4%B1c%C4%B1-c66889b63db3)
 
 ## 🛠️ Kullanılan Teknolojiler
 
