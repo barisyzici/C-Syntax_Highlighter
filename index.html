@@ -28,8 +28,8 @@
       line-height: 1.5;
       white-space: pre-wrap;
       word-break: break-word;
-      min-height: 200px;
-      max-height: 300px;
+      min-height: 600px;
+      max-height: 800px;
       overflow: auto;
       color: transparent; 
       position: relative;
@@ -44,8 +44,8 @@
     /* Kod yazma alanı (textarea) */
     #textarea {
       width: 100%;
-      min-height: 200px;
-      max-height: 300px;
+      min-height: 600px;
+      max-height: 800px;
       padding: 16px;
       font-family: 'Fira Code', monospace;
       font-size: 16px;
@@ -108,18 +108,12 @@
     <!-- Temizle butonu -->
     <button type="button" onclick="clearEditor()">Temizle</button>
   </div>
-
-  <!-- Kod kutusu ve satır numaraları -->
-  <div style="display: flex;">
-    <!-- Satır numaraları -->
-    <div id="lineNumbers" style="background:#232323; color:#666; padding:16px 8px 16px 0; text-align:right; user-select:none; font-size:16px; line-height:1.5; border-radius:8px 0 0 8px; min-width:32px;"></div>
-    <div style="flex:1;">
-      <!-- Renklendirilmiş kod kutusu -->
-      <div id="highlight" aria-hidden="true"></div>
-      <!-- Kod yazma alanı -->
-      <textarea id="textarea" spellcheck="false" tabindex="0" placeholder="Kodu buraya yaz..."></textarea>
-    </div>
-  </div>
+<!-- Yan yana üç kutu: textarea, satır numarası ve highlight  -->
+<div style="display: flex; gap: 16px; margin-top: 32px;">
+  <textarea id="textarea" spellcheck="false" tabindex="0" placeholder="Kodu buraya yaz..." style="flex:1; min-width:0;"></textarea>
+   <div id="lineNumbers" style="background:#232323; color:#666; padding:16px 8px 16px 0; text-align:right; user-select:none; font-size:16px; line-height:1.5; border-radius:8px 0 0 8px; min-width:32px;"></div>
+  <div id="highlight" aria-hidden="true" style="flex:1; min-width:0;"></div>
+</div>
 
   <script>
     // C dili anahtar kelimeleri
