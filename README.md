@@ -84,8 +84,6 @@ Projenin detaylı çözüm sürecini ve tasarım kararlarını anlattığım yaz
 ```
 project-root/
 ├── index.html
-├── style.css
-├── script.js
 └── README.md
 ```
 
