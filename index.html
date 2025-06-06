@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>C - Syntax Highlighter</title>
+  <style>
+    /* Sayfa genel stil ayarları */
+    body {
+      margin: 0;
+      padding: 20px;
+      background: #1e1e1e;
+      font-family: 'Fira Code', monospace;
+      color: white;
+    }
+
+    h2 {
+      margin-bottom: 10px;
+    }
+
+    /* Renklendirilmiş kod kutusu */
+    #highlight {
+      background: #2d2d2d;
+      border: 1px solid #444;
+      border-radius: 8px;
+      padding: 16px;
+      font-family: 'Fira Code', monospace;
+      font-size: 16px;
+      line-height: 1.5;
+      white-space: pre-wrap;
+      word-break: break-word;
+      min-height: 200px;
+      max-height: 300px;
+      overflow: auto;
+      color: transparent; 
+      position: relative;
+      user-select: none; 
+      margin-bottom: 12px;
+    }
+
+    #highlight span {
+      user-select: text;
+    }
+
+    /* Kod yazma alanı (textarea) */
+    #textarea {
+      width: 100%;
+      min-height: 200px;
+      max-height: 300px;
+      padding: 16px;
+      font-family: 'Fira Code', monospace;
+      font-size: 16px;
+      line-height: 1.5;
+      background: #1e1e1e;
+      color: white;
+      border: 1px solid #444;
+      border-radius: 8px;
+      resize: vertical;
+      overflow: auto;
+      box-sizing: border-box;
+      caret-color: white;
+    }
+
+    /* Token türlerine göre renklendirme */
+    .token.keyword    { color: #C586C0; font-weight: bold; }
+    .token.number     { color: #B5CEA8; }
+    .token.identifier { color: #9CDCFE; }
+    .token.operator   { color: #D4D4D4; }
+    .token.comment    { color: #6A9955; font-style: italic; }
+    .token.paren      { color: #DCDCAA; }
+    .token.error {
+      background: rgba(255, 0, 0, 0.3);
+      border-radius: 4px;
+      padding: 1px 3px;
+    }
+    .token.string { color: #CE9178; }
+
+    /* Hata mesajı stili */
+    #errorMessage {
+      color: #FF5F5F;
+      font-weight: bold;
+      margin-top: 12px;
+      font-size: 14px;
+    }
+
+    .buttons {
+      margin-top: 12px;
+    }
+
+    button {
+      background: #2d2d2d;
+      color: white;
+      border: 1px solid #444;
+      padding: 6px 12px;
+      border-radius: 6px;
+      font-family: monospace;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background: #3a3a3a;
+    }
+  </style>
+</head>
+<body>
+  <h2>C - Syntax Highlighter</h2>
+  <p id="errorMessage"></p>
+  <div class="buttons">
+    <!-- Temizle butonu -->
+    <button type="button" onclick="clearEditor()">Temizle</button>
+  </div>
+
+  <!-- Kod kutusu ve satır numaraları -->
+  <div style="display: flex;">
+    <!-- Satır numaraları -->
+    <div id="lineNumbers" style="background:#232323; color:#666; padding:16px 8px 16px 0; text-align:right; user-select:none; font-size:16px; line-height:1.5; border-radius:8px 0 0 8px; min-width:32px;"></div>
+    <div style="flex:1;">
+      <!-- Renklendirilmiş kod kutusu -->
+      <div id="highlight" aria-hidden="true"></div>
+      <!-- Kod yazma alanı -->
+      <textarea id="textarea" spellcheck="false" tabindex="0" placeholder="Kodu buraya yaz..."></textarea>
+    </div>
+  </div>
+
+  <script>
+    // C dili anahtar kelimeleri
+    const keywords = [
+      'auto', 'break', 'case', 'char', 'const', 'continue', 'default', 'do', 'double',
+      'else', 'enum', 'extern', 'float', 'for', 'goto', 'if', 'inline', 'int', 'long',
+      'register', 'restrict', 'return', 'short', 'signed', 'sizeof', 'static', 'struct',
+      'switch', 'typedef', 'union', 'unsigned', 'void', 'volatile', 'while'
+    ];
+    const textarea = document.getElementById('textarea');
+    const highlight = document.getElementById('highlight');
+    const errorMessage = document.getElementById('errorMessage');
+
+    // HTML karakterlerini kaçırmak için fonksiyon
+    function escapeHTML(str) {
+      return str.replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;');
+    }
+
+    // Kodun tokenlara ayrılması (tokenizer)
+    function tokenize(code) {
+      const tokens = [];
+      // Temel C tokenlarını ayıran regex
+      const regex = /\s+|\/\/.*|"(?:\\.|[^"\\])*"|'(?:\\.|[^'\\])*'|[a-zA-Z_]\w*|\d+|[+\-*/=;<>.,\[\]]|[(){}]/g;
+      const lines = code.split('\n');
+      for (let lineNum = 0; lineNum < lines.length; lineNum++) {
+        const line = lines[lineNum];
+        let match;
+        regex.lastIndex = 0;
+        while ((match = regex.exec(line)) !== null) {
+          const token = match[0];
+          if (/^\s+$/.test(token)) continue;
+          let type = 'identifier';
+          if (/^\/\//.test(token)) type = 'comment';
+          else if (/^".*"$/.test(token) || /^'.*'$/.test(token)) type = 'string';
+          else if (keywords.includes(token)) type = 'keyword';
+          else if (/^\d+$/.test(token)) type = 'number';
+          else if (/^[+\-*/=;<>.,]$/.test(token)) type = 'operator';
+          else if (/^[()\[\]{}]$/.test(token)) type = 'paren';
+          tokens.push({ type, value: token, line: lineNum + 1 });
+        }
+      }
+      return tokens;
+    }
+
+    // Tokenları C sözdizimine göre kontrol eden parser
+    function parse(tokens) {
+      let i = 0;
+      function current() { return tokens[i]; }
+      function eat(type, value = null) {
+        if (current() && current().type === type && (value === null || current().value === value)) {
+          i++;
+          return true;
+        }
+        return false;
+      }
+
+      // Basit ifade kontrolü (sayı, değişken, işlem)
+      function expr() {
+        if (eat('number') || eat('identifier')) {
+          while (current() && current().type === 'operator' && current().value !== ';') {
+            eat('operator');
+            if (!eat('number') && !eat('identifier')) return false;
+          }
+          return true;
+        }
+        return false;
+      }
+
+      // Bir satırın C sözdizimine uygun olup olmadığını kontrol eden fonksiyon
+      function statement() {
+        // Değişken/fonksiyon tanımı
+        if (
+          eat('keyword', 'int') || eat('keyword', 'float') || eat('keyword', 'char') || eat('keyword', 'void')
+        ) {
+          // Pointer desteği
+          while (eat('operator', '*')) {}
+          if (!eat('identifier')) return false;
+          // Dizi/pointer desteği
+          while (true) {
+            if (eat('operator', '[')) {
+              if (!eat('number')) return false; 
+              if (!eat('operator', ']')) return false;
+              continue;
+            } else if (eat('operator', '*')) {
+              continue;
+            } else {
+              break;
+            }
+          }
+          // Fonksiyon tanımı
+          if (eat('paren', '(')) {
+            while (!eat('paren', ')')) {
+              if (!eat('keyword') && !eat('identifier') && !eat('operator', ',') && !eat('operator', '*')) return false;
+            }
+            if (!eat('paren', '{')) return false;
+            while (current() && (current().type !== 'paren' || current().value !== '}')) {
+              if (!statement()) return false;
+            }
+            return eat('paren', '}');
+          } else {
+            // Değişken tanımı/atama
+            if (eat('operator', '=')) {
+              if (!expr() && !eat('string')) return false;
+            }
+            return eat('operator', ';');
+          }
+        }
+
+        // typedef struct {...} Name;
+        if (eat('keyword', 'typedef')) {
+          if (eat('keyword', 'struct')) {
+            if (!eat('paren', '{')) return false;
+            while (current() && (current().type !== 'paren' || current().value !== '}')) {
+              if (!statement()) return false;
+            }
+            if (!eat('paren', '}')) return false;
+            if (!eat('identifier')) return false;
+            return eat('operator', ';');
+          }
+        }
+        // struct {...};
+        if (eat('keyword', 'struct')) {
+          if (eat('identifier')) {
+            if (eat('paren', '{')) {
+              while (current() && (current().type !== 'paren' || current().value !== '}')) {
+                if (!statement()) return false;
+              }
+              if (!eat('paren', '}')) return false;
+            }
+            return eat('operator', ';');
+          }
+        }
+
+        // if/else ve while blokları
+        if (eat('keyword', 'if')) {
+          if (!eat('paren', '(') || !expr() || !eat('paren', ')') || !eat('paren', '{')) return false;
+          while (current() && (current().type !== 'paren' || current().value !== '}')) {
+            if (!statement()) return false;
+          }
+          if (!eat('paren', '}')) return false;
+          if (eat('keyword', 'else')) {
+            if (!eat('paren', '{')) return false;
+            while (current() && (current().type !== 'paren' || current().value !== '}')) {
+              if (!statement()) return false;
+            }
+            if (!eat('paren', '}')) return false;
+          }
+          return true;
+        }
+        if (eat('keyword', 'while')) {
+          if (!eat('paren', '(') || !expr() || !eat('paren', ')') || !eat('paren', '{')) return false;
+          while (current() && (current().type !== 'paren' || current().value !== '}')) {
+            if (!statement()) return false;
+          }
+          return eat('paren', '}');
+        }
+
+        // return ifadesi
+        if (eat('keyword', 'return')) {
+          if (!expr() && !eat('string')) return false;
+          if (!eat('operator', ';')) return false;
+          return true;
+        }
+
+        // Atama işlemleri
+        if (eat('identifier')) {
+          while (true) {
+            if (eat('operator', '[')) {
+              if (!eat('number')) return false; 
+              if (!eat('operator', ']')) return false;
+              continue;
+            }
+            if (eat('operator', '*')) continue;
+            break;
+          }
+          if (!eat('operator', '=')) return false;
+          if (!expr() && !eat('string')) return false;
+          if (!eat('operator', ';')) return false;
+          return true;
+        }
+
+        // Yorum satırı
+        if (eat('comment')) {
+          return true;
+        }
+
+        // Hiçbir kurala uymuyorsa hata
+        return false;
+      }
+
+      // Tüm programı satır satır kontrol eden fonksiyon
+      function parseProgram() {
+        if (tokens.length === 0) return { valid: true, errorIndex: -1 };
+        while (i < tokens.length) {
+          if (tokens[i].type === 'comment') {
+            i++;
+            continue;
+          }
+          const start = i;
+          if (!statement()) {
+            return { valid: false, errorIndex: i < tokens.length ? i : start };
+          }
+        }
+        return { valid: true, errorIndex: -1 };
+      }
+
+      return parseProgram();
+    }
+
+    // Satır numaralarını gösteren kutu
+    const lineNumbers = document.getElementById('lineNumbers');
+
+    // Kod değiştikçe renklendirme ve hata kontrolü yapan fonksiyon
+    function update() {
+      const text = textarea.value.replace(/\r/g, '');
+      const lines = text.split('\n');
+      const tokens = tokenize(text);
+      const parseResult = parse(tokens);
+
+      let html = '';
+      let tokenIndex = 0;
+      for (let l = 0; l < lines.length; l++) {
+        const lineTokens = [];
+        while (tokenIndex < tokens.length && tokens[tokenIndex].line === l + 1) {
+          const t = tokens[tokenIndex];
+          const isError = t.type !== 'comment' && tokenIndex === parseResult.errorIndex;
+          lineTokens.push(`<span class="token ${t.type}${isError ? ' error' : ''}">${escapeHTML(t.value)}</span>`);
+          tokenIndex++;
+        }
+        html += lineTokens.join(' ') || '<span>&nbsp;</span>';
+        if (l < lines.length - 1) html += '\n';
+      }
+
+      highlight.innerHTML = html;
+
+      // Satır numaralarını güncelle
+      lineNumbers.innerHTML = Array.from({ length: Math.max(lines.length, 1) }, (_, i) => i + 1).join('<br>');
+
+      // Hata mesajı ve kenarlık rengi
+      if (parseResult.valid) {
+        textarea.style.borderColor = '#444';
+        errorMessage.textContent = '';
+      } else {
+        const err = tokens[parseResult.errorIndex];
+        errorMessage.textContent = `❌ Hata: Geçersiz ifade -> "${err ? err.value : '...'}" satır ${err?.line || '?'}`;
+        textarea.style.borderColor = 'red';
+      }
+    }
+
+    // Editörü temizleyen fonksiyon
+    function clearEditor() {
+      textarea.value = '';
+      highlight.innerHTML = '';
+      errorMessage.textContent = '';
+      textarea.style.borderColor = '#444';
+      textarea.focus();
+      update();
+    }
+
+    // Scroll senkronizasyonu
+    textarea.addEventListener('scroll', () => {
+      highlight.scrollTop = textarea.scrollTop;
+      highlight.scrollLeft = textarea.scrollLeft;
+    });
+
+    // Kod değiştikçe güncelle
+    textarea.addEventListener('input', update);
+    update();
+  </script>
+</body>
+</html>
